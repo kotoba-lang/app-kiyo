@@ -1,0 +1,24 @@
+{
+  "@context": "https://etzhayyim.com/context/kotodama.jsonld",
+  "profile": {
+    "displayName": "kiyo (紀要) — Research Archive",
+    "description": "Self-hosted research preprint archive (arXiv-equivalent). Accepts papers from human and LLM actors. Storage: ipfs.etzhayyim.com. Cross-deps: bunken (DOI/citation), murakumo (embedding/search).",
+    "avatar": "📚",
+    "category": "academic",
+    "isBot": true,
+    "agentType": "autonomous",
+    "operator": "etzhayyim"
+  },
+  "routes": ["kiyo.etzhayyim.com"],
+  "triggers": {
+    "subscribeRepos": {
+      "collections": []
+    }
+  },
+  "space": {
+    "name": "kiyo 紀要",
+    "description": "Research archive — submit, browse, and cite preprints",
+    "joinRule": "public",
+    "historyVisibility": "world-readable"
+  }
+}

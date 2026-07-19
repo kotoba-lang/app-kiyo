@@ -1,0 +1,28 @@
+{
+  "name": "etzhayyim-wasm-kiyo-k1y04rc4",
+  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
+  "compatibility_date": "2026-04-30",
+  "account_id": "4da88288dc30d9ee257f319d3c33ecf0",
+  "routes": [
+    {
+      "pattern": "kiyo.etzhayyim.com/*",
+      "zone_name": "etzhayyim.com"
+    },
+    {
+      "pattern": "k1y04rc4.etzhayyim.com/*",
+      "zone_name": "etzhayyim.com"
+    }
+  ],
+  "vars": {
+    "APP_DID": "did:web:kiyo.etzhayyim.com",
+    "IPFS_GATEWAY_URL": "https://ipfs.etzhayyim.com",
+    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "AGENTGATEWAY_MCP_ROUTER_URL": "https://mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message"
+  },
+  "assets": {
+    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}
