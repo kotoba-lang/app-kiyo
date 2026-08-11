@@ -1,1 +1,6 @@
-{:schema "etzhayyim.repository/v1" :name "com-etzhayyim-app-kiyo" :kind :app :canonical-metadata :edn}
+{:schema "etzhayyim.repository/v1"
+ :name "app-kiyo"
+ :kind :app
+ :canonical-metadata :edn
+ :boundary {:role :research-archive-application
+            :review-interface "kotoba-lang/app-reviewer"}}
