@@ -11,7 +11,7 @@ Vendor source NOT carried over — wave-3 follow-up sub-PRs will port each comma
 
 ## Status
 
-- Scaffold (this PR): CLAUDE.md, kotodama.jsonld, package.json, svelte/, wrangler.jsonc copied with sed
+- Scaffold: CLAUDE.md, kotodama.jsonld, package.json, wrangler.jsonc copied with sed. The SvelteKit frontend scaffold (`svelte/`) was migrated to ClojureScript (reagent + re-frame + jp-go-dds) at `../cljs/`; see `../cljs/src/kiyo/app.cljs`. The one backend file that lived under `svelte/` (an XRPC proxy route) moved to `xrpc-proxy.ts` in this directory — unwired, see its header comment.
 - Lexicons: 13 files migrated to `00-contracts/lexicons/com/etzhayyim/kiyo/`
 - kotoba reference impl: deferred (Option B pattern follows etz #89 / #90)
 - kiyo.etzhayyim.com deploy: NOT yet (operator stage)
