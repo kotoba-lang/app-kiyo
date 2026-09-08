@@ -1,6 +1,14 @@
 {
   "name": "etzhayyim-wasm-kiyo-k1y04rc4",
-  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
+  // "main" dropped: it pointed at the SvelteKit Cloudflare adapter's build
+  // output (svelte/.svelte-kit/cloudflare/_worker.js), which no longer
+  // exists after the Svelte -> ClojureScript frontend migration (see
+  // ../cljs/). This component ships no worker of its own — "../src/" held
+  // only README.md before this migration, no app.ts — so there is nothing
+  // legitimate to repoint "main" at that could call `env.ASSETS.fetch()`.
+  // Frontend is served as plain static assets instead (see "assets"
+  // below). UNVERIFIED: no `wrangler deploy`/`dev` was run as part of this
+  // migration.
   "compatibility_date": "2026-04-30",
   "account_id": "4da88288dc30d9ee257f319d3c33ecf0",
   "routes": [
@@ -16,11 +24,11 @@
   "vars": {
     "APP_DID": "did:web:kiyo.etzhayyim.com",
     "IPFS_GATEWAY_URL": "https://ipfs.etzhayyim.com",
-    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_FRAMEWORK": "cljs-reagent-re-frame-jp-go-dds",
     "AGENTGATEWAY_MCP_ROUTER_URL": "https://mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message"
   },
   "assets": {
-    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "directory": "./cljs/public",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
