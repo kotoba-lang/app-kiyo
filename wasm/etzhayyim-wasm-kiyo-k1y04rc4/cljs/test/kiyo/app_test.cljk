@@ -20,7 +20,7 @@
            @(rf/subscribe [:routes])))
     (is (= 4 (count @(rf/subscribe [:vars]))))
     (is (true? @(rf/subscribe [:xrpc?])))
-    (is (= "wasm/etzhayyim-wasm-kiyo-k1y04rc4/cljs/src/kiyo/app.cljs"
+    (is (= "wasm/etzhayyim-wasm-kiyo-k1y04rc4/cljs/src/kiyo/app.cljk"
            @(rf/subscribe [:relative-path])))))
 
 (deftest vars-sub-carries-every-original-binding-name
