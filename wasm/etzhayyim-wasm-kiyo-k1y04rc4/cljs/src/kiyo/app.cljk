@@ -50,7 +50,7 @@
    :vars ["AGENTGATEWAY_MCP_ROUTER_URL" "APP_DID" "APP_FRAMEWORK"
           "IPFS_GATEWAY_URL"]
    :xrpc? true
-   :relative-path "wasm/etzhayyim-wasm-kiyo-k1y04rc4/cljs/src/kiyo/app.cljs"})
+   :relative-path "wasm/etzhayyim-wasm-kiyo-k1y04rc4/cljs/src/kiyo/app.cljk"})
 
 (rf/reg-event-db
  :initialize-db
