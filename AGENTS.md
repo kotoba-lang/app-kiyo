@@ -9,7 +9,7 @@
 | **NSID prefix** | `com.etzhayyim.kiyo.*` |
 | **paper_id** | `kiyo:{YYYY}:{TID}` (e.g. `kiyo:2026:lzxy1a`) |
 | **Storage** | `ipfs.etzhayyim.com` — CIDv1 content-addressed, URL = `https://ipfs.etzhayyim.com/ipfs/{cid}` |
-| **ADR** | this CLAUDE.md is authoritative; `ADR-2605203000-kotoba-write-target-options.md` for write-target choice (PDS XRPC Option B) |
+| **ADR** | this AGENTS.md is authoritative; `ADR-2605203000-kotoba-write-target-options.md` for write-target choice (PDS XRPC Option B) |
 
 ## Component Map
 

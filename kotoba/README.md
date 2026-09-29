@@ -2,7 +2,7 @@
 
 Phase E Option B reference implementation of kiyo (紀要 / research archive) on the etzhayyim substrate.
 
-Per [ADR-2605203000](../../../90-docs/adr/2605203000-kotoba-write-target-options.md) and the [kiyo design spec](../CLAUDE.md), kiyo migrates from vendor's `createKyselyDb` pattern (RW direct write) to **Option B** — PDS XRPC writes via `@etzhayyim/sdk e.write()`.
+Per [ADR-2605203000](../../../90-docs/adr/2605203000-kotoba-write-target-options.md) and the [kiyo design spec](../AGENTS.md), kiyo migrates from vendor's `createKyselyDb` pattern (RW direct write) to **Option B** — PDS XRPC writes via `@etzhayyim/sdk e.write()`.
 
 Coverage: **12 of 12 (100%)** kiyo canonical XRPC commands ported. Plus 1 helper (`listReviews`).
 
@@ -16,7 +16,7 @@ All 12 canonical kiyo lexicons now have kotoba reference impl. Wire-up
 to a Worker / LangServer pod XRPC handler is the next operator task per
 ADR-2605203000.
 
-## Authority-chain DIDs (per kiyo CLAUDE.md)
+## Authority-chain DIDs (per kiyo AGENTS.md)
 
 ```
 did:web:kiyo.etzhayyim.com                            — controller
@@ -95,7 +95,7 @@ Option C (IPFS-only) hybrid: blob → IPFS, metadata → PDS (this PR).
 
 ## Related
 
-- [kiyo design spec](../CLAUDE.md) — actor architecture (XRPC + LangServer + RisingWave UDF + LangGraph)
+- [kiyo design spec](../AGENTS.md) — actor architecture (XRPC + LangServer + RisingWave UDF + LangGraph)
 - [ADR-2605203000](../../../90-docs/adr/2605203000-kotoba-write-target-options.md) — Phase E write-target options
 - [sbom kotoba](../../etzhayyim-project-sbom/kotoba/) — sibling Option B reference (17/N)
 - [hanrei kotoba](../../etzhayyim-project-hanrei/kotoba/) — Option B reference (31/31 ✓)
