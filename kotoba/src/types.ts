@@ -2,9 +2,9 @@
  * kiyo kotoba — record types.
  *
  * Per ADR-2605203000 Option B (PDS XRPC). kiyo = 紀要 = research archive.
- * Per kiyo CLAUDE.md: paper_id = `kiyo:{YYYY}:{TID}`.
+ * Per kiyo AGENTS.md: paper_id = `kiyo:{YYYY}:{TID}`.
  *
- * Identity hierarchy (per kiyo CLAUDE.md):
+ * Identity hierarchy (per kiyo AGENTS.md):
  *   did:web:kiyo.etzhayyim.com                            — controller
  *   did:web:kiyo.etzhayyim.com:paper:{paperId-slug}       — Paper
  *   did:web:kiyo.etzhayyim.com:review:{paperId}-{seq}     — Review
