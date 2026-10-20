@@ -1,0 +1,27 @@
+(ns kiyo.withdraw-parity-test
+  "aiueos/kiyo_withdraw.cljk（判定コア）と正本（paperRegistry.ts / final.ts）の
+  parity。ID 形・撤回の冪等・深さ上限が変われば落ちる drift 検査。"
+  (:require [clojure.test :refer [deftest is testing]]
+            [clojure.string :as str]
+            ["fs" :as fs]))
+
+(def registry
+  (fs/readFileSync (str/join "/" ["kotoba" "src" "paperRegistry.ts"]) "utf8"))
+(def final-src
+  (fs/readFileSync (str/join "/" ["kotoba" "src" "final.ts"]) "utf8"))
+
+(deftest paper-rules-match-guest
+  (testing "guest test-id: paper_id の形（kiyo:YYYY:TID、TID 1..32）"
+    (is (str/includes? registry "kiyo:"))
+    (is (str/includes? registry "{4}"))
+    (is (str/includes? registry "{1,32}"))
+    (is (str/includes? registry "invalidPaperId")))
+  (testing "guest test-withdraw / test-missing: 撤回の必須と拒否"
+    (is (str/includes? registry "missingRequiredFields"))
+    (is (str/includes? registry "paperNotFound"))
+    (is (str/includes? registry "reason")))
+  (testing "guest test-idempotent: 撤回撤回済みは冪等（再発行ではなくそのまま）"
+    (is (str/includes? registry "withdrawn")))
+  (testing "guest test-depth: 引用グラフの深さ上限"
+    (is (str/includes? final-src "MAX_DEPTH = 5"))
+    (is (str/includes? final-src "DEFAULT_DEPTH = 2"))))

@@ -1,0 +1,64 @@
+(ns kiyo.withdraw
+  "kiyo 論文状態判定コア — itonami dapp bundle（pure, :effects #{}）。
+
+  論文の ID 形・撤回・引用グラフの判定（正本: kotoba/src/paperRegistry.ts +
+  final.ts）:
+
+  - **paper_id の形**: kiyo: + 4 桁年 + 1..32 文字の英小数字とハイフン
+    （大文字小文字非区別）。
+  - **withdraw**: paperId と reason が必須。無い論文は paperNotFound。
+    **撤回済みは冪等**（そのまま返す = 書き換えない）。それ以外の状態から
+    撤回できる（status → withdrawn を再発行）。
+  - **引用グラフの深さ**: 既定 2、**上限 5**（MAX_DEPTH）。
+
+  paper-id-ok: 1 = 形どおり
+  withdraw-judgment の戻り: 0 = 撤回 / 1 = missingRequiredFields
+    / 2 = paperNotFound / 3 = すでに撤回済み（冪等）
+  citation-depth-ok: 1 = 0..5 の内
+
+  実行 host はスカラーのみ = KIR v3 / i64/direct ABI（kernel/selfhost 両対応）。
+
+  テストはゼロ引数 test-*、戻り 1/0:
+  <amu> test aiueos/kiyo_withdraw.cljk"
+  (:export [main paper-id-ok withdraw-judgment citation-depth-ok
+            test-id test-withdraw test-missing test-idempotent test-depth
+            test-fail-closed]))
+
+(defn main [] :i64
+  0)
+
+(defn paper-id-ok [has-prefix :i64 year-4digits :i64 tid-len-ok :i64 tid-charset-ok :i64] :i64
+  (if (and (= has-prefix 1) (= year-4digits 1) (= tid-len-ok 1) (= tid-charset-ok 1)) 1 0))
+
+(defn withdraw-judgment [has-required :i64 has-paper :i64 already-withdrawn :i64] :i64
+  (if (= has-required 0)
+    1
+    (if (= has-paper 0)
+      2
+      (if (= already-withdrawn 1) 3 0))))
+
+(defn citation-depth-ok [depth :i64] :i64
+  (if (and (>= depth 0) (<= depth 5)) 1 0))
+
+;; --- tests（戻り 1 = pass） ------------------------------------------------
+
+(defn test-id [] :i64
+  (if (= (+ (paper-id-ok 1 1 1 1) (paper-id-ok 1 1 1 0) (paper-id-ok 0 1 1 1)) 1) 1 0))
+
+(defn test-withdraw [] :i64
+  (if (= (withdraw-judgment 1 1 0) 0) 1 0))
+
+(defn test-missing [] :i64
+  (if (= (+ (withdraw-judgment 0 1 0) (withdraw-judgment 1 0 0)) 3) 1 0))
+
+(defn test-idempotent [] :i64
+  ;; 撤回済みは書き換えずそのまま返す（冪等）
+  (if (= (withdraw-judgment 1 1 1) 3) 1 0))
+
+(defn test-depth [] :i64
+  ;; 既定 2 / 上限 5
+  (if (= (+ (citation-depth-ok 0) (citation-depth-ok 5) (citation-depth-ok 6)) 2) 1 0))
+
+(defn test-fail-closed [] :i64
+  ;; ID 形の各要件欠落は拒否
+  (if (= (+ (paper-id-ok 1 0 1 1) (paper-id-ok 1 1 0 1)) 0) 1 0))

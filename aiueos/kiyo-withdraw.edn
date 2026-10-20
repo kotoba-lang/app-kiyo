@@ -1,0 +1,17 @@
+;; app-kiyo — itonami（dapp）の aiueos アプリ記述子（notes.edn 形）。
+;; 判定コアは aiueos/kiyo_withdraw.cljk（paper_id 形・撤回・引用深さ）。
+;; 正本は kotoba/src/paperRegistry.ts + final.ts。pure（:effects #{}）。
+{:aiueos/component :app/kiyo-withdraw
+ :aiueos/kind :app
+ :aiueos/trust :untrusted
+ :aiueos/source "kiyo_withdraw.cljk"
+ :aiueos/wasm "kiyo_withdraw.wasm"
+ :aiueos/entry "main"
+ :aiueos/args []
+ :aiueos/imports #{}
+ :aiueos/exports #{:app/main
+                   :app/paper-id-ok
+                   :app/withdraw-judgment
+                   :app/citation-depth-ok}
+ :aiueos/effects #{}
+ :aiueos/limits {:memory-pages 16 :fuel 5000000}}
