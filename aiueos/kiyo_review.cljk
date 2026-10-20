@@ -1,0 +1,72 @@
+(ns kiyo.review
+  "kiyo（紀要）判定コア — itonami dapp bundle（pure, :effects #{}）。
+
+  自前研究アーカイブの論文・査読の判定（正本: kotoba/src/types.ts +
+  reviewRegistry.ts）:
+
+  - **PaperStatus は 6 つの閉じた集合**: submitted / under-review / accepted
+    / withdrawn / rejected / published。
+  - **ReviewRecommendation は 4 つの閉じた集合**: accept / minor-revision /
+    major-revision / reject。
+  - 査読の score は **scorePermille 0..1000**（範囲外は scoreOutOfRange）。
+  - 査読登録は (paperId, seq) で**冪等**（alreadyExists）。
+
+  paper-status-ok: 1 = 0..5 の内（0 submitted .. 5 published）
+  recommendation-ok: 1 = 0..3 の内（0 accept / 1 minor / 2 major / 3 reject）
+  review-admission の戻り: 0 = 登録可 / 1 = missingRequiredFields
+    / 2 = scoreOutOfRange / 3 = invalidRecommendation
+  dedup-take: 1 = alreadyExists / 0 = 新規
+
+  実行 host はスカラーのみ = KIR v3 / i64/direct ABI（kernel/selfhost 両対応）。
+
+  テストはゼロ引数 test-*、戻り 1/0:
+  <amu> test aiueos/kiyo_review.cljk"
+  (:export [main paper-status-ok recommendation-ok review-admission dedup-take
+            test-status test-rec test-admission test-score test-dedup
+            test-fail-closed]))
+
+(defn main [] :i64
+  0)
+
+(defn paper-status-ok [code :i64] :i64
+  (if (and (>= code 0) (<= code 5)) 1 0))
+
+(defn recommendation-ok [code :i64] :i64
+  (if (and (>= code 0) (<= code 3)) 1 0))
+
+(defn review-admission [has-required :i64 score-permille :i64 rec-code :i64] :i64
+  (if (= has-required 0)
+    1
+    (if (or (< score-permille 0) (> score-permille 1000))
+      2
+      (if (= (recommendation-ok rec-code) 1) 0 3))))
+
+(defn dedup-take [same-key :i64 has-existing :i64] :i64
+  (if (and (= same-key 1) (= has-existing 1)) 1 0))
+
+;; --- tests（戻り 1 = pass） ------------------------------------------------
+
+(defn test-status [] :i64
+  ;; 6 つの閉じた集合（submitted .. published）
+  (if (= (+ (paper-status-ok 0) (paper-status-ok 5) (paper-status-ok 6)) 2) 1 0))
+
+(defn test-rec [] :i64
+  ;; accept / minor-revision / major-revision / reject
+  (if (= (+ (recommendation-ok 0) (recommendation-ok 3) (recommendation-ok 4)) 2) 1 0))
+
+(defn test-admission [] :i64
+  (if (= (review-admission 1 500 1) 0) 1 0))
+
+(defn test-score [] :i64
+  ;; scorePermille は 0..1000
+  (if (= (+ (review-admission 1 0 0) (review-admission 1 1000 0)
+            (review-admission 1 -1 0) (review-admission 1 1001 0))
+         4)
+    1 0))
+
+(defn test-dedup [] :i64
+  (if (= (+ (dedup-take 1 1) (dedup-take 1 0) (dedup-take 0 1)) 1) 1 0))
+
+(defn test-fail-closed [] :i64
+  ;; 集合外の recommendation は拒否
+  (if (= (review-admission 1 500 9) 3) 1 0))
