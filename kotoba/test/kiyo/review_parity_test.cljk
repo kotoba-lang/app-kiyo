@@ -1,0 +1,28 @@
+(ns kiyo.review-parity-test
+  "aiueos/kiyo_review.cljk（判定コア）と正本（types.ts / reviewRegistry.ts）の
+  parity。閉じた集合・score 範囲・拒否名が変われば落ちる drift 検査。"
+  (:require [clojure.test :refer [deftest is testing]]
+            [clojure.string :as str]
+            ["fs" :as fs]))
+
+(def types-src
+  (fs/readFileSync (str/join "/" ["kotoba" "src" "types.ts"]) "utf8"))
+(def registry
+  (fs/readFileSync (str/join "/" ["kotoba" "src" "reviewRegistry.ts"]) "utf8"))
+
+(deftest closed-sets-match-guest
+  (testing "guest test-status: PaperStatus の 6 つ"
+    (doseq [s ["submitted" "under-review" "accepted" "withdrawn" "rejected" "published"]]
+      (is (str/includes? types-src s))))
+  (testing "guest test-rec: ReviewRecommendation の 4 つ"
+    (doseq [r ["accept" "minor-revision" "major-revision" "reject"]]
+      (is (str/includes? types-src r)))))
+
+(deftest admission-rules-match-guest
+  (testing "guest test-score: scorePermille 0..1000"
+    (is (str/includes? registry "scoreOutOfRange"))
+    (is (str/includes? registry "scorePermille")))
+  (testing "guest test-admission / test-fail-closed: 拒否名"
+    (is (str/includes? registry "missingRequiredFields")))
+  (testing "guest test-dedup: (paperId, seq) は冪等"
+    (is (str/includes? registry "alreadyExists"))))

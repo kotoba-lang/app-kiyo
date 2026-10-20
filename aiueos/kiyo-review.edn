@@ -1,0 +1,18 @@
+;; app-kiyo — itonami（dapp）の aiueos アプリ記述子（notes.edn 形）。
+;; 判定コアは aiueos/kiyo_review.cljk（PaperStatus / ReviewRecommendation / 査読 admission）。
+;; 正本は kotoba/src/types.ts + reviewRegistry.ts。pure（:effects #{}）。
+{:aiueos/component :app/kiyo-review
+ :aiueos/kind :app
+ :aiueos/trust :untrusted
+ :aiueos/source "kiyo_review.cljk"
+ :aiueos/wasm "kiyo_review.wasm"
+ :aiueos/entry "main"
+ :aiueos/args []
+ :aiueos/imports #{}
+ :aiueos/exports #{:app/main
+                   :app/paper-status-ok
+                   :app/recommendation-ok
+                   :app/review-admission
+                   :app/dedup-take}
+ :aiueos/effects #{}
+ :aiueos/limits {:memory-pages 16 :fuel 5000000}}
